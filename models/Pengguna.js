@@ -29,6 +29,33 @@ const PenggunaSchema = new mongoose.Schema({
     }
 })
 
+// TODO bikin static function untuk login
+PenggunaSchema.statics.login = async function (email, password) {
+    const user = await this.findOne({ email: email });
+    if (user) {
+        const auth = await bcrypt.compare(password, user.password);
+        console.log(auth);
+        if (auth) {
+            return user;
+        }
+        else {
+            throw new Error("incorrect password");
+
+        }
+    } else {
+        throw new Error("email not found");
+    }
+}
+
+
+PenggunaSchema.pre('save', async function (next) {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+});
+
+
+
 
 
 const Pengguna = mongoose.model("Pengguna", PenggunaSchema);

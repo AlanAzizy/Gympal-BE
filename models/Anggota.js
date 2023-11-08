@@ -5,13 +5,13 @@ const bcrypt = require("bcrypt");
 const AnggotaSchema = new mongoose.Schema({
     noTelepon: {
         type: String,
-        required: true
+        required: [true, "please enter your phone number"]
     },
     alamat: {
         type: String,
-        required: true
+        required: [true, "please enter your address"]
     },
-    statusKanggotaan: {
+    statusKeanggotaan: {
         type: Boolean,
         default: false,
         required: true

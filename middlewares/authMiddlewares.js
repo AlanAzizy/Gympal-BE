@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/Pengguna");
+const Pengguna = require("../models/Pengguna");
+const Anggota = require("../models/Anggota");
 
 module.exports.authCheck = (req, res, next) => {
     // TODO ambil token dari cookies
@@ -8,18 +9,31 @@ module.exports.authCheck = (req, res, next) => {
     if (token) {
         // TODO  ada jika: 
         // TODO cek verifikasi token
-        jwt.verify(token, "9cdef459a8f71de4e4016adb9d8b1179e8092221b7154a26234512dae02025fc", async (err, decodedToken) => {
+        jwt.verify(token, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", async (err, decodedToken) => {
             if (!err) {
                 // TODO jika terferifikasi : 
-                // TODO  ubah res.loacls.user kemudian next
-                const user = await User.findOne({ _id: decodedToken.id });
-                res.locals.user = user;
-                next();
+                // TODO cek apakah dia merupakan admin atau pengguna
+                if (decodedToken.role == "admin") {
+                    // TODO jika dia merupakan admin, set local pengguna sebagai pengguna dan local role sebagai obj kosong
+                    const pengguna = await Pengguna.findOne({ _id: decodedToken.idPengguna });
+                    res.locals.pengguna = pengguna;
+                    res.locals.role = {};
+                    next();
+                }
+                else {
+                    // TODO jika dia merupakan pengguna, set local pengguna sebagai pengguna dan local role sebagai object anggota yang bersangkutan
+                    const pengguna = await Pengguna.findOne({ _id: decodedToken.idPengguna });
+                    res.locals.pengguna = pengguna;
+                    const anggota = await Anggota.findOne({ _id: decodedToken.idRole });
+                    res.locals.role = anggota;
+                    next();
+                }
             }
             else {
                 // TODO jika tidak terverifikasi
                 // TODO ubah res.locals.user menjadi null kemudian next
-                res.locals.user = null;
+                res.locals.pengguna = null;
+                res.locals.role = null;
                 next();
             }
         })
@@ -39,12 +53,12 @@ module.exports.protectRoute = (req, res, next) => {
     // TODO cek jwtnya ada ato enggak
     if (jwt) {
         // TODO kalo ada, cek apakah terverifikasi
-        jwt.verify(token, "9cdef459a8f71de4e4016adb9d8b1179e8092221b7154a26234512dae02025fc", (err, decodedToken) => {
+        jwt.verify(token, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", (err, decodedToken) => {
             if (!err) {
                 // TODO kalo terverifikasi, cek apakah ada di database atau tidak
-                const id = decodedToken.id;
-                const user = User.findOne({ _id: id });
-                if (user) {
+                const idPengguna = decodedToken.idPengguna;
+                const pengguna = Pengguna.findOne({ _id: idPengguna })
+                if (pengguna) {
                     // TODO kalo ada, next
                     next();
                 }
@@ -52,7 +66,6 @@ module.exports.protectRoute = (req, res, next) => {
                     // TODo kalo tidak balikin ke login
                     res.redirect("/auth/login")
                 }
-                next();
             } else {
                 // TODO kalo tidak terverifikasi, balikin ke login
                 res.redirect("/auth/login")
