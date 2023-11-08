@@ -37,9 +37,12 @@ mongoose.connect(DbURI, options)
 
 
 // ! ROUTES
+app.use(authMiddlewares.authCheck);
 app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
+app.use("/auth", authRoutes);
+
 
 // !GLOBAL ERROR HANDLER
 app.use(function (req, res, next) {
