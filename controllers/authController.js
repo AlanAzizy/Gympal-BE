@@ -62,7 +62,7 @@ module.exports.signUpPost = async (req, res) => {
         const token = createToken(user._id, anggota._id, "anggota");
         const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
         res.cookie("jwt", token, cookieConfig);
-        res.status(201).json({ anggota: anggota });
+        res.status(201).json({ anggota: anggota, token });
     }
     catch (err) {
         // TODO kalau gagal, error handling, dan kirim errr
@@ -91,7 +91,7 @@ module.exports.loginPost = async (req, res) => {
             const token = createToken(pengguna._id, pengguna.roleId, "admin");
             const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
             res.cookie("jwt", token, cookieConfig);
-            res.status(201).json({ pengguna: pengguna });
+            res.status(201).json({ pengguna: pengguna, token });
 
         }
         else if (pengguna.role == "anggota") {
@@ -101,7 +101,7 @@ module.exports.loginPost = async (req, res) => {
             const token = createToken(pengguna._id, pengguna.roleId, "anggota");
             const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
             res.cookie("jwt", token, cookieConfig);
-            res.status(201).json({ pengguna: pengguna });
+            res.status(201).json({ pengguna: pengguna, token });
 
         }
     }
