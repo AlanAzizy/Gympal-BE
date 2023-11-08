@@ -9,9 +9,6 @@ var logger = require('morgan');
 const mongoose = require("mongoose");
 const authRoutes = require("./routers/authRoutes");
 const authMiddlewares = require("./middlewares/authMiddlewares")
-var cors = require('cors');
-
-const Pengguna = require("./models/Pengguna");
 
 
 var app = express();
@@ -40,12 +37,9 @@ mongoose.connect(DbURI, options)
 
 
 // ! ROUTES
-app.use(authMiddlewares.authCheck);
 app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
-app.use("/auth", authRoutes);
-
 
 // !GLOBAL ERROR HANDLER
 app.use(function (req, res, next) {

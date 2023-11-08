@@ -1,23 +1,20 @@
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const Anggota = require("../models/Anggota");
-const Pengguna = require("../models/Pengguna");
-
 
 // ! MEMBUAT JWT
-const maxAge = 1 * 24 * 60 * 60;
-const createToken = (idPengguna, idRole, role) => {
-    return jwt.sign({ idPengguna, idRole, role: role }, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", { expiresIn: maxAge });
+const maxAge = 7 * 24 * 60 * 60;
+const createToken = (id) => {
+    return jwt.sign({ id }, "9cdef459a8f71de4e4016adb9d8b1179e8092221b7154a26234512dae02025fc", { expiresIn: maxAge });
 }
 
 
 // ! ERROR HANDILNG
 const handleErrors = (err) => {
     const errorObj = {
-        nama: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        password: "",
-        noTelepon: "",
-        alamat: ""
+        password: ""
     }
     console.log(err);
     if (err.code === 11000) {
@@ -44,25 +41,21 @@ const handleErrors = (err) => {
 
 // ! REALISASI
 module.exports.signUpGet = (req, res) => {
-    // Mengambalikan halaman signup
+    res.render("signup");
 }
 
 module.exports.signUpPost = async (req, res) => {
+    // TODO mengambil data dari request
+    const { firstName, lastName, email, password } = req.body;
+    // TODO memasukkannya ke dalam db (try catch)
     try {
-        const { noTelepon, alamat } = req.body;
-        const foto = "";
-        if (req.body.foto) {
-            // udah ada foto
-            foto = req.body.foto;
-        }
-        const anggota = await Anggota.create({ noTelepon, alamat, statusKeanggotaan: false, foto });
         // TODO kalau berhasil, bikin jwt, masukin cookies, kembalikan object user sebagai penanda keberhasilan
-        const { nama, email, password } = req.body;
-        const user = await Pengguna.create({ nama, email, password, role: "anggota", roleId: anggota._id });
-        const token = createToken(user._id, anggota._id, "anggota");
+        const user = await User.create({ firstName, lastName, email, password });
+        const token = createToken(user._id);
         const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
         res.cookie("jwt", token, cookieConfig);
-        res.status(201).json({ anggota: anggota });
+        res.status(201).json({ user: user });
+
     }
     catch (err) {
         // TODO kalau gagal, error handling, dan kirim errr
@@ -71,10 +64,11 @@ module.exports.signUpPost = async (req, res) => {
         res.status(400).json({ error: errorObj });
     }
 
+
 }
 
 module.exports.loginGet = (req, res) => {
-    // Kembalikan halaman login
+    res.render("login");
 }
 
 module.exports.loginPost = async (req, res) => {
@@ -82,28 +76,13 @@ module.exports.loginPost = async (req, res) => {
     const { email, password } = req.body;
     try {
         // TODO panggil fungsi login pada model User
-        const pengguna = await Pengguna.login(email, password);
+        const user = await User.login(email, password);
+        // TODO jika login berhasil, buat jwt, masukkan cookies, kembalikan kembalian user untuk menandai pada view, ubah status menjadi 201 (try)
+        const token = createToken(user._id);
+        const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
+        res.cookie("jwt", token, cookieConfig);
+        res.status(201).json({ user: user });
 
-        // TODO cek apakah penggunna merupakan admin atau anggota
-        if (pengguna.role == "admin") {
-            // TODO jika pengguna merupakan admin, bikin jwt untuk admin
-            // TODO jika login berhasil, buat jwt, masukkan cookies, kembalikan kembalian user untuk menandai pada view, ubah status menjadi 201 (try)
-            const token = createToken(pengguna._id, pengguna.roleId, "admin");
-            const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
-            res.cookie("jwt", token, cookieConfig);
-            res.status(201).json({ pengguna: pengguna });
-
-        }
-        else if (pengguna.role == "anggota") {
-            // TODO jika pengguna meupakan anggota, tambahkan jwt untuk anggota
-            // TODO jika pengguna merupakan admin, bikin jwt untuk admin
-            // TODO jika login berhasil, buat jwt, masukkan cookies, kembalikan kembalian user untuk menandai pada view, ubah status menjadi 201 (try)
-            const token = createToken(pengguna._id, pengguna.roleId, "anggota");
-            const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
-            res.cookie("jwt", token, cookieConfig);
-            res.status(201).json({ pengguna: pengguna });
-
-        }
     }
     catch (err) {
         // TODO jika login gagal, lakukan handling error, kembalikan error ke depan, ubah status menjadi 400
