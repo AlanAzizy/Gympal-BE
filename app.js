@@ -10,9 +10,9 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routers/authRoutes");
 const authMiddlewares = require("./middlewares/authMiddlewares")
 
+const User = require("./models/Pengguna");
 
 var app = express();
-app.use(cors());
 
 // ! view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,12 +25,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ! DATABASE CONNECTION
-const DbURI = "mongodb+srv://Dzikri:<password>@cluster0.yimmfp3.mongodb.net/?retryWrites=true&w=majority/GymPal"
+const DbURI = "mongodb+srv://GymPal:Gwencana@cluster0.yimmfp3.mongodb.net/GymPal"
 const options = { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connect(DbURI, options)
   .then((result) => {
-    app.listen(3001, () => {
-      console.log("listening on port 3001...");
+    app.listen(3000, () => {
+      console.log("listening on port 3000...");
     })
   })
   .catch((err) => console.log(err));
