@@ -7,6 +7,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
+const authRoutes = require("./routers/authRoutes");
+const authMiddlewares = require("./middlewares/authMiddlewares")
 var cors = require('cors');
 
 const Pengguna = require("./models/Pengguna");
@@ -26,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ! DATABASE CONNECTION
-const DbURI = "mongodb+srv://GymPal:Gwencana@cluster0.yimmfp3.mongodb.net/GymBal"
+const DbURI = "mongodb+srv://Dzikri:<password>@cluster0.yimmfp3.mongodb.net/?retryWrites=true&w=majority/GymPal"
 const options = { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connect(DbURI, options)
   .then((result) => {
@@ -38,9 +40,12 @@ mongoose.connect(DbURI, options)
 
 
 // ! ROUTES
+app.use(authMiddlewares.authCheck);
 app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
+app.use("/auth", authRoutes);
+
 
 // !GLOBAL ERROR HANDLER
 app.use(function (req, res, next) {
