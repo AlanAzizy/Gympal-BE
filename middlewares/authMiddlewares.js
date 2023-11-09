@@ -16,6 +16,7 @@ module.exports.authCheck = (req, res, next) => {
                 if (decodedToken.role == "admin") {
                     // TODO jika dia merupakan admin, set local pengguna sebagai pengguna dan local role sebagai obj kosong
                     const pengguna = await Pengguna.findOne({ _id: decodedToken.idPengguna });
+                    console.log(pengguna);
                     res.locals.pengguna = pengguna;
                     res.locals.role = {};
                     next();
