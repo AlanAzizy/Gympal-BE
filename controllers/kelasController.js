@@ -116,7 +116,7 @@ module.exports.insertAllKelas = async (req, res) => {
 
 //all role
 module.exports.kelasByIdGet = async (req, res) => {
-    const {_id} = req.body;
+    const _id = req.params;
     try {
         const kelas_found = Kelas.findOne({_id: {$gte:_id} })
         .then((docs)=>{

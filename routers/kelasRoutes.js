@@ -6,6 +6,6 @@ router.get("/allKelas", kelasController.allKelasGet);
 router.get("/kelasBelumDilakukan", kelasController.kelasBelumDilakukan)
 router.get("/kelasTerdaftar",kelasController.getKelasByAnggotaTerdaftar)
 // router.post("/insertAllKelas", kelasController.insertAllKelas);
-router.post("/kelasById", kelasController.kelasByIdGet);
+router.get("/kelasById/:_id", kelasController.kelasByIdGet);
 router.post("/addNewKelas", kelasController.addNewKelas);
 module.exports = router;
