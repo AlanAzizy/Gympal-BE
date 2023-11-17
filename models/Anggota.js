@@ -25,5 +25,14 @@ const AnggotaSchema = new mongoose.Schema({
     kumpulanPembayaran: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pembayaran" }]
 })
 
+AnggotaSchema.statics.getAllAnggota = async function () {
+    const anggotaAll = await this.find();
+    if (anggotaAll) {
+        return anggotaAll;
+    } else {
+        throw new Error("anggota not found");
+    }
+}
+
 const Anggota = mongoose.model("Anggota", AnggotaSchema);
 module.exports = Anggota;

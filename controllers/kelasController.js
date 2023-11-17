@@ -1,7 +1,8 @@
 const Kelas = require('../models/Kelas')
+const Anggota = require('../models/Anggota')
 
 module.exports.allKelasGet = async (req, res) => {
-    const { token } = req.body;
+
     try {
         const kelas = await Kelas.getAllKelas();
         res.status(201).json({kelas})
@@ -11,6 +12,34 @@ module.exports.allKelasGet = async (req, res) => {
         const errorObj = handleErrors(err);
         res.status(400).json({ error: errorObj });
     }
+}
+
+module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
+    const _id = res.locals.role._id;
+    try{
+        const anggota = await Anggota.getAllAnggota().findOne({_id: {$gte:_id} });
+        const kelas = angota.kumpulanKelas;
+        res.status(201).json({kelas});
+    }
+    catch (err) {
+        // TODO jika login gagal, lakukan handling error, kembalikan error ke depan, ubah status menjadi 400
+        const errorObj = handleErrors(err);
+        res.status(400).json({ error: errorObj });
+    }
+}
+
+module.exports.kelasBelumDilakukan = async (req, res) => {
+    const waktu_sekarang = new Date();
+    try{
+        //Gett array kelas -> filter waktu, terus send hasil filter
+        const kelas = await Kelas.getAllKelas().filter((kelas) => kelas.tanggal > waktu_sekarang);
+        res.status(201).json({kelas})
+    }
+    catch(err){
+        const errorObj = handleErrors(err);
+        res.status(400).json({ error: errorObj });
+    }
+
 }
 
 module.exports.insertAllKelas = async (req, res) => {
@@ -114,3 +143,4 @@ module.exports.addNewKelas= async (req,res) => {
         })
     }
 }
+

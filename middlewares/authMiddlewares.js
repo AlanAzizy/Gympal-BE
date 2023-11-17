@@ -53,6 +53,8 @@ module.exports.protectRoute = (req, res, next) => {
     const token = req.cookies.jwt;
     // TODO cek jwtnya ada ato enggak
     if (jwt) {
+        //cek apaka masuk
+        console.log(jwt)
         // TODO kalo ada, cek apakah terverifikasi
         jwt.verify(token, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", (err, decodedToken) => {
             if (!err) {
