@@ -23,5 +23,15 @@ const KelasSchema = new mongoose.Schema({
     }
 })
 
+KelasSchema.statics.getAllKelas = async function () {
+    const kelasAll = await this.find();
+    if (kelasAll) {
+        return kelasAll;
+    } else {
+        throw new Error("kelas not found");
+    }
+}
+
+
 const Kelas = mongoose.model("Kelas", KelasSchema);
 module.exports = Kelas;
