@@ -1,6 +1,7 @@
 const Kelas = require('../models/Kelas')
 const Anggota = require('../models/Anggota')
 
+//all role
 module.exports.allKelasGet = async (req, res) => {
 
     try {
@@ -14,6 +15,7 @@ module.exports.allKelasGet = async (req, res) => {
     }
 }
 
+//anggota
 module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
     const _id = res.locals.role._id;
     try{
@@ -28,6 +30,7 @@ module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
     }
 }
 
+//all role
 module.exports.kelasBelumDilakukan = async (req, res) => {
     const waktu_sekarang = new Date();
     try{
@@ -39,9 +42,9 @@ module.exports.kelasBelumDilakukan = async (req, res) => {
         const errorObj = handleErrors(err);
         res.status(400).json({ error: errorObj });
     }
-
 }
 
+//tambah dummy data
 module.exports.insertAllKelas = async (req, res) => {
     try {
         const foto = "";
@@ -111,6 +114,7 @@ module.exports.insertAllKelas = async (req, res) => {
     }
 }
 
+//all role
 module.exports.kelasByIdGet = async (req, res) => {
     const {_id} = req.body;
     try {
@@ -129,6 +133,7 @@ module.exports.kelasByIdGet = async (req, res) => {
     }
 }
 
+//admin
 module.exports.addNewKelas= async (req,res) => {
     const {namaKelas, instruktur, durasi, detail, tanggal} = req.body;
     const new_kelas = await Kelas.create({namaKelas, instruktur, durasi, detail, tanggal});
