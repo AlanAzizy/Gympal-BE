@@ -61,7 +61,7 @@ module.exports.menghapusKelas = async (req,res) => {
                             { $pull: { "kumpulanKelas": kelas } } // Perintah untuk menghapus kelas dari array kumpulanKelas
                           );
                     }else{
-                          res.status(400).json({"message" : "kelas telah usai"})
+                          res.status(400).json({"message" : "Anda belum mendaftar kelas ini"})
                     }
                 }
                 else{
