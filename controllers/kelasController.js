@@ -19,8 +19,8 @@ module.exports.mendaftarKelas = async (req,res) => {
     if (kelas_id){
         const _id = res.locals.role._id.toHexString();
         try{
-            const anggota = await Anggota.getAllAnggota().findOne({_id: _id });
-            const kelas = await Kelas.getAllKelas().findOne({_id: {$gte:kelas_id} });
+            const anggota = await Anggota.findOne({_id: _id });
+            const kelas = await Kelas.findOne({_id: {$gte:kelas_id} });
             if (anggota.statusKeanggotaan){ //cek apakah status kenaggotaan aktif
                 if (kelas.tanggal  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
                     if (anggota.kumpulanKelas.some((kelas_anggota.id!==kelas.id))){ //cek apakah anggota sudah terdaftar
