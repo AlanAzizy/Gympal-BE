@@ -17,9 +17,9 @@ module.exports.allKelasGet = async (req, res) => {
 module.exports.mendaftarKelas = async (req,res) => {
     const kelas_id = req.body._id;
     if (kelas_id){
-        const _id = res.locals.role._id;
+        const _id = res.locals.role._id.toHexString();
         try{
-            const anggota = await Anggota.getAllAnggota().findOne({_id: {$gte:_id} });
+            const anggota = await Anggota.getAllAnggota().findOne({_id: _id });
             const kelas = await Kelas.getAllKelas().findOne({_id: {$gte:kelas_id} });
             if (anggota.statusKeanggotaan){ //cek apakah status kenaggotaan aktif
                 if (kelas.tanggal  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
@@ -39,9 +39,8 @@ module.exports.mendaftarKelas = async (req,res) => {
             }else{
                 res.status(428).json({"message" : "Silakan melakukan pembayaran keanggotaan"});
             }
-        }catch{
-            const errorObj = handleErrors(err);
-            res.status(400).json({ error: errorObj });
+        }catch(err){
+            res.status(400).json(err.message);
         }
     }
 }
