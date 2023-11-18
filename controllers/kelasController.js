@@ -20,7 +20,7 @@ module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
     const _id = res.locals.role._id;
     try{
         const anggota = await Anggota.getAllAnggota().findOne({_id: {$gte:_id} });
-        const kelas = angota.kumpulanKelas;
+        const kelas = anggota.kumpulanKelas;
         res.status(201).json({kelas});
     }
     catch (err) {
@@ -35,8 +35,13 @@ module.exports.kelasBelumDilakukan = async (req, res) => {
     const waktu_sekarang = new Date();
     try{
         //Gett array kelas -> filter waktu, terus send hasil filter
-        const kelas = await Kelas.getAllKelas().filter((kelas) => kelas.tanggal > waktu_sekarang);
-        res.status(201).json({kelas})
+        const kelas = await Kelas.getAllKelas();
+        kelas_filtered = kelas.filter((elemen) => {
+            if ( elemen.tanggal>waktu_sekarang){
+                return elemen;
+            }
+        });
+        res.status(201).json({kelas_filtered})
     }
     catch(err){
         const errorObj = handleErrors(err);
@@ -123,7 +128,9 @@ module.exports.kelasByIdGet = async (req, res) => {
             res.status(201).json(docs)
         })
         .catch((err)=>{
-            console.log(err);
+            res.status(400).json({
+                "message" : "kelas dengan id tersebut tidak ditemukan"
+            })
         });
     }
     catch (err) {
@@ -136,16 +143,25 @@ module.exports.kelasByIdGet = async (req, res) => {
 //admin
 module.exports.addNewKelas= async (req,res) => {
     const {namaKelas, instruktur, durasi, detail, tanggal} = req.body;
-    const new_kelas = await Kelas.create({namaKelas, instruktur, durasi, detail, tanggal});
-    if (new_kelas){
-        res.status(201).json({
-            "message" : "create Kelas succes",
-            new_kelas
-        })
-    }else{
-        res.status(300).json({
-            "message" : "failed to create Kelas"
-        })
+    if (namaKelas===undefined){ return res.status(300).json({"message" : "masukkan nama kelas"});}
+    if (instruktur===undefined){ return res.status(300).json({"message" : "masukkan nama instruktur"});}
+    if (durasi===undefined){ return res.status(300).json({"message" : "masukkan durasi kelas"})}
+    if (tanggal===undefined){return  res.status(300).json({"message" : "masukkan tanggal kelas"})}
+    try{
+        const new_kelas = await Kelas.create({namaKelas, instruktur, durasi, detail, tanggal});
+        if (new_kelas){
+            res.status(201).json({
+                "message" : "create Kelas succes",
+                new_kelas
+            })
+        }else{
+            res.status(300).json({
+                "message" : "failed to create Kelas"
+            })
+        }
+    }catch(err){
+        console.log(err.message);
+        res.status(400).json(err.message)
     }
 }
 
