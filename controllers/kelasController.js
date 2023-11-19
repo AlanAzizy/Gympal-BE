@@ -59,19 +59,19 @@ module.exports.menghapusKelas = async (req,res) => {
                             { "_id": anggota._id }, // Kriteria untuk mencari dokumen yang ingin diubah
                             { $pull: { "kumpulanKelas": kelas } } // Perintah untuk menghapus kelas dari array kumpulanKelas
                           );
+                          res.status(201).json({"message" : `Anda berhasil menghapus kelas ${kelas.namaKelas} dari daftar anda`});
                     }else{
-                          res.status(400).json({"message" : "Anda belum mendaftar kelas ini"})
+                          res.status(400).json({"message" : "Anda belum mendaftar kelas ini"});
                     }
                 }
                 else{
-                    res.status(400).json({"message" : "kelas telah usai"})
+                    res.status(400).json({"message" : "kelas telah usai"});
                 }
             }else{
-                res.status(428).json({"message" : "Silakan melakukan pembayaran keanggotaan"})
+                res.status(428).json({"message" : "Silakan melakukan pembayaran keanggotaan"});
             }
-        }catch{
-            const errorObj = handleErrors(err);
-            res.status(400).json({ error: errorObj });
+        }catch(err){
+            res.status(400).json(err.message);
         }
     }
 }
