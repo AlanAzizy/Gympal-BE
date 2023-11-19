@@ -25,8 +25,7 @@ module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
     }
     catch (err) {
         // TODO jika login gagal, lakukan handling error, kembalikan error ke depan, ubah status menjadi 400
-        const errorObj = handleErrors(err);
-        res.status(400).json({ error: errorObj });
+        res.status(400).json(err.message);
     }
 }
 
@@ -44,8 +43,7 @@ module.exports.kelasBelumDilakukan = async (req, res) => {
         res.status(201).json({kelas_filtered})
     }
     catch(err){
-        const errorObj = handleErrors(err);
-        res.status(400).json({ error: errorObj });
+        res.status(400).json(err.message);
     }
 }
 
@@ -135,8 +133,7 @@ module.exports.kelasByIdGet = async (req, res) => {
     }
     catch (err) {
         // TODO jika login gagal, lakukan handling error, kembalikan error ke depan, ubah status menjadi 400
-        const errorObj = handleErrors(err);
-        res.status(400).json({ error: errorObj });
+        res.status(400).json(err.message);
     }
 }
 
