@@ -24,7 +24,7 @@ module.exports.addNewKelas= async (req,res) => {
     if (durasi===undefined){ return res.status(300).json({"message" : "masukkan durasi kelas"})}
     if (tanggal===undefined){return  res.status(300).json({"message" : "masukkan tanggal kelas"})}
 
-    if (tanggal > new Date()){
+    if (new Date(tanggal) > new Date()){
         try {
             const new_kelas = await Kelas.create({namaKelas, instruktur, durasi, detail, tanggal});
             if (new_kelas){
@@ -38,7 +38,7 @@ module.exports.addNewKelas= async (req,res) => {
                 })
             }
         }catch(err){
-            res.status(400).json(err.message);
+            res.status(400).json({"error" : err.message});
         }
     }else{
         res.status(400).json({
@@ -48,62 +48,65 @@ module.exports.addNewKelas= async (req,res) => {
 }
 
 module.exports.removeKelas= async (req,res) => {
-    const kelas_id =req.body.kelas_id;
-    Kelas.deleteOne(
-        { _id: kelas_id },
-        function(err, result) {
-          if (err) {
-            console.error('Error occurred while deleting document:', err);
-            res.status(300).json({
-                "message" : "Gagal untuk menghapus kelas"
-            })
-            return result;
-          }
-          //update atribut kumpulanKelas di anggota
-          Anggota.updateMany(
+    const kelas_id =req.body.id;
+
+    kelas_akan_dihapus = await Kelas.findOne(
+        { _id: kelas_id }
+    )
+
+    if (!kelas_akan_dihapus){
+        res.status(300).json({"message" : "kelas tidak tersedia"});
+    }else{
+        await Kelas.deleteOne(
+            { _id: kelas_id }
+            )
+        //update atribut kumpulanKelas di anggota
+        Anggota.updateMany(
             {},
-            {$pull: { "kumpulanKelas": kelas_id }},
-            function(err, result) {
-                if (err) {
-                  console.error('Error occurred while deleting document:', err);
-                  res.status(300).json({
-                      "message" : "Gagal untuk menghapus kelas"
-                  })
-                  return;
-                }
-                res.status(201).json({
-                    "message" : "Berhasil untuk menghapus kelas"
-                })
-            }
-          )
+            {$pull: { "kumpulanKelas": kelas_id}});
+        
+        kelas_terhapus = await Kelas.findOne(
+            { _id: kelas_id }
+        )
+    
+        if (!kelas_terhapus){
+            res.status(201).json({"message" : "berhasil menghapus kelas", "kelas" : kelas_akan_dihapus});
         }
-      );
+    }
+
+
 }
 
 module.exports.updateKelas = async (req,res) => {
-    const {kelas_id,namaKelas,instruktur,durasi,detail} = req.body;
+    const {kelas_id,namaKelas,instruktur,durasi,detail,tanggal} = req.body;
     //req body harus lengkap
-    const kelas_lama = await Kelas.findOne({"_id" : kelas_id});
-    //syarat buat update kelas
-    if (kelas_id===undefined){return res.status(400).json({"message" : "Silakan masukkan id kelas"})};
-    if (namaKelas===undefined){namaKelas=kelas_lama.namaKelas};
-    if (instruktur===undefined){instruktur=kelas_lama.instruktur};
-    if (durasi===undefined){durasi=kelas_lama.durasi};
-    if (detail===undefined){detail=kelas_lama.detail};
-    if (Kelas.findOne({"_id" : kelas_id})){       
-        Kelas.updateOne(
-            { "_id": kelas_id },
-            {$set : { "nameKelas": namaKelas, "instruktur" : instruktur, "durasi" : durasi, "detail": detail}},
-            function(err, result) {
-              if (err) {
-                console.error('Error occurred while deleting document:', err);
-                res.status(300).json({
-                    "message" : "Gagal untuk menghapus kelas"
-                })
-                return result;
-              }
-            }
-          );
+    try {
+
+        const kelas_lama = await Kelas.findOne({"_id" : kelas_id});
+        //syarat buat update kelas
+        if (kelas_id===undefined){return res.status(400).json({"message" : "Silakan masukkan id kelas"})};
+        if (namaKelas===undefined){namaKelas=kelas_lama.namaKelas};
+        if (instruktur===undefined){instruktur=kelas_lama.instruktur};
+        if (durasi===undefined){durasi=kelas_lama.durasi};
+        if (detail===undefined){detail=kelas_lama.detail};
+        if (tanggal===undefined){tanggal=kelas_lama.tanggal};
+        console.log(kelas_lama);
+        if (kelas_lama){  
+            try{
+                await Kelas.findOneAndUpdate(
+                    { "_id": kelas_id },
+                    {$set : { "nameKelas": namaKelas, "instruktur" : instruktur, "durasi" : durasi, "detail": detail, "tanggal" : new Date(tanggal)}}
+                  );
+                  kelas_baru = await Kelas.find(
+                    { "_id": kelas_id }
+                  );
+                res.status(201).json({"message" : "berhasil mengupdate kelas", "kelas" :kelas_baru })
+            }   catch(err){
+                res.status(400).json({"message" : "gagal mengupdate kelas"});
+            }  
+        }
+    }catch (err){
+        res.status(400).json(err.message)
     }
 }
 
