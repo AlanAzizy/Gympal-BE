@@ -18,9 +18,19 @@ module.exports.allKelasGet = async (req, res) => {
 //anggota
 module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
     const _id = res.locals.role._id;
+    const arrayId = [];
+    const kelas = [];
     try{
         const anggota = await Anggota.findOne({_id: {$gte:_id} });
-        const kelas = anggota.kumpulanKelas;
+        console.log(anggota.kumpulanKelas);
+        anggota.kumpulanKelas.forEach( (id) => {
+            arrayId.push(id.toHexString());
+        }
+        )
+        for (id of arrayId){
+            kelas.push( await Kelas.findOne({_id : id}))
+        }
+        
         res.status(201).json({kelas});
     }
     catch (err) {
