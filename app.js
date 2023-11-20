@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
 app.use("/auth", authRoutes);
-app.use("kelolaAnggota", kelolaAnggotaRoutes)
+app.use("/kelolaAnggota", kelolaAnggotaRoutes)
 
 
 // !GLOBAL ERROR HANDLER
