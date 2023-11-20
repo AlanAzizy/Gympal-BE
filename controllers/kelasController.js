@@ -20,17 +20,17 @@ module.exports.mendaftarKelas = async (req,res) => {
         const _id = res.locals.role._id.toHexString();
         try{
             const anggota = await Anggota.findOne({_id: _id });
-            const kelas = await Kelas.findOne({_id: {$gte:kelas_id} });
+            const kelas = await Kelas.findOne({ _id:kelas_id } );
             if (anggota.statusKeanggotaan){ //cek apakah status kenaggotaan aktif
                 if (kelas.tanggal  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
-                    if (anggota.kumpulanKelas.some((kelas_anggota.id!==kelas.id))){ //cek apakah anggota sudah terdaftar
-                        Anggota.updateOne(
-                            { "_id": anggota._id }, // Kriteria untuk mencari dokumen yang ingin diubah
+                    if (anggota.kumpulanKelas.some(id => { if (id.equals(kelas._id)){return false;} })){ //cek apakah anggota sudah terdaftar
+                        await Anggota.findOneAndUpdate(
+                            { "_id": _id }, // Kriteria untuk mencari dokumen yang ingin diubah
                             { $push: { "kumpulanKelas": kelas._id } } // Perintah untuk menambahkan kelas ke dalam array kumpulanKelas
                           );
                           res.status(201).json({"message" : "berhasil menambah kelas", "kelas" : kelas});
                     }else{
-                          res.status(400).json({"message" : "kelas telah usai"});
+                          res.status(400).json({"message" : "Anda telah terdaftar"});
                     }
                 }
                 else{
@@ -50,13 +50,13 @@ module.exports.menghapusKelas = async (req,res) => {
     if (kelas_id){
         const _id = res.locals.role._id;
         try{
-            const anggota = await Anggota.getAllAnggota().findOne({_id: {$gte:_id} });
-            const kelas = await Kelas.getAllKelas().findOne({_id: {$gte:kelas_id} });
+            const anggota = await Anggota.findOne({_id: {$gte:_id} });
+            const kelas = await Kelas.findOne({_id: {$gte:kelas_id} });
             if (anggota.statusKeanggotaan){ //cek apakah status keanggotaan aktif
-                if (kelas.tanggal  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
-                    if (anggota.kumpulanKelas.some((kelas_anggota.id!==kelas.id))){ //cek apakah anggota sudah terdaftar
-                        Anggota.updateOne(
-                            { "_id": anggota._id }, // Kriteria untuk mencari dokumen yang ingin diubah
+                if (new Date(kelas.tanggal)  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
+                    if (anggota.kumpulanKelas.some(id => {if (id.equals(kelas._id)){return true;} })){ //cek apakah anggota sudah terdaftar
+                        await Anggota.updateOne(
+                            { "_id": _id }, // Kriteria untuk mencari dokumen yang ingin diubah
                             { $pull: { "kumpulanKelas": kelas._id } } // Perintah untuk menghapus kelas dari array kumpulanKelas
                           );
                           res.status(201).json({"message" : `Anda berhasil menghapus kelas ${kelas.namaKelas} dari daftar anda`});
