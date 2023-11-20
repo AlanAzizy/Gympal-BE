@@ -64,18 +64,18 @@ module.exports.protectRoute = (req, res, next) => {
                 }
                 else {
                     // TODo kalo tidak balikin ke login
-                    res.redirect("/auth/login")
+                    res.status(401).json({ message: "not authenticated" });
                 }
             } else {
                 // TODO kalo tidak terverifikasi, balikin ke login
-                res.redirect("/auth/login")
+                res.status(401).json({ message: "not authenticated" });
             }
         })
 
     }
     else {
         // TODO kalo tidak ada, balikin ke login
-        res.redirect("/auth/login")
+        res.status(401).json({ message: "not authenticated" });
     }
 }
 
