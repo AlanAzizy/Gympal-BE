@@ -19,7 +19,8 @@ module.exports.allKelasGet = async (req, res) => {
 module.exports.getKelasByAnggotaTerdaftar = async (req,res) => {
     const _id = res.locals.role._id;
     try{
-        const anggota = await Anggota.getAllAnggota().findOne({_id: {$gte:_id} });
+        const anggota = await Anggota.findOne({_id: {$gte:_id} });
+        console.log(anggota);
         const kelas = anggota.kumpulanKelas;
         res.status(201).json({kelas});
     }
