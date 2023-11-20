@@ -23,8 +23,7 @@ module.exports.mendaftarKelas = async (req,res) => {
             const kelas = await Kelas.findOne({ _id:kelas_id } );
             if (anggota.statusKeanggotaan){ //cek apakah status kenaggotaan aktif
                 if (kelas.tanggal  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
-                    console.log(anggota.kumpulanKelas);
-                    if (anggota.kumpulanKelas.length==0 || anggota.kumpulanKelas.some(id => { if (id.equals(kelas._id)){return false;} })){ //cek apakah anggota sudah terdaftar
+                    if (anggota.kumpulanKelas.length==0 || (!anggota.kumpulanKelas.some(id => id.equals(kelas_id)))){ //cek apakah anggota sudah terdaftar
                         await Anggota.findOneAndUpdate(
                             { "_id": _id }, // Kriteria untuk mencari dokumen yang ingin diubah
                             { $push: { "kumpulanKelas": kelas._id } } // Perintah untuk menambahkan kelas ke dalam array kumpulanKelas
