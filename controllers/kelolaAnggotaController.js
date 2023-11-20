@@ -2,6 +2,7 @@ const Anggota = require("../models/Anggota");
 
 module.exports.setActive = async (req, res) => {
     try {
+        // aman
         const response = await Anggota.findOneAndUpdate({ _id: req.params.idAnggota }, { statusKeanggotaan: true });
         res.status(200).json({ message: "Data Updated Sucessfully" });
     }
@@ -13,6 +14,7 @@ module.exports.setActive = async (req, res) => {
 
 module.exports.setNonActive = async (req, res) => {
     try {
+        // aman
         const response = await Anggota.findOneAndUpdate({ _id: req.params.idAnggota }, { statusKeanggotaan: false });
         res.status(200).json({ message: "Data Updated Sucessfully" });
     }
