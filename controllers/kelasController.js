@@ -26,7 +26,7 @@ module.exports.mendaftarKelas = async (req,res) => {
                     if (anggota.kumpulanKelas.some((kelas_anggota.id!==kelas.id))){ //cek apakah anggota sudah terdaftar
                         Anggota.updateOne(
                             { "_id": anggota._id }, // Kriteria untuk mencari dokumen yang ingin diubah
-                            { $push: { "kumpulanKelas": kelas } } // Perintah untuk menambahkan kelas ke dalam array kumpulanKelas
+                            { $push: { "kumpulanKelas": kelas._id } } // Perintah untuk menambahkan kelas ke dalam array kumpulanKelas
                           );
                           res.status(201).json({"message" : "berhasil menambah kelas", "kelas" : kelas});
                     }else{
@@ -57,7 +57,7 @@ module.exports.menghapusKelas = async (req,res) => {
                     if (anggota.kumpulanKelas.some((kelas_anggota.id!==kelas.id))){ //cek apakah anggota sudah terdaftar
                         Anggota.updateOne(
                             { "_id": anggota._id }, // Kriteria untuk mencari dokumen yang ingin diubah
-                            { $pull: { "kumpulanKelas": kelas } } // Perintah untuk menghapus kelas dari array kumpulanKelas
+                            { $pull: { "kumpulanKelas": kelas._id } } // Perintah untuk menghapus kelas dari array kumpulanKelas
                           );
                           res.status(201).json({"message" : `Anda berhasil menghapus kelas ${kelas.namaKelas} dari daftar anda`});
                     }else{
