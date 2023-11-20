@@ -23,7 +23,8 @@ module.exports.mendaftarKelas = async (req,res) => {
             const kelas = await Kelas.findOne({ _id:kelas_id } );
             if (anggota.statusKeanggotaan){ //cek apakah status kenaggotaan aktif
                 if (kelas.tanggal  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
-                    if (anggota.kumpulanKelas.some(id => { if (id.equals(kelas._id)){return false;} })){ //cek apakah anggota sudah terdaftar
+                    console.log(anggota.kumpulanKelas);
+                    if (anggota.kumpulanKelas.length==0 || anggota.kumpulanKelas.some(id => { if (id.equals(kelas._id)){return false;} })){ //cek apakah anggota sudah terdaftar
                         await Anggota.findOneAndUpdate(
                             { "_id": _id }, // Kriteria untuk mencari dokumen yang ingin diubah
                             { $push: { "kumpulanKelas": kelas._id } } // Perintah untuk menambahkan kelas ke dalam array kumpulanKelas
@@ -54,7 +55,7 @@ module.exports.menghapusKelas = async (req,res) => {
             const kelas = await Kelas.findOne({_id: {$gte:kelas_id} });
             if (anggota.statusKeanggotaan){ //cek apakah status keanggotaan aktif
                 if (new Date(kelas.tanggal)  > new Date()){ //cek apakah kelasnya sudah atau belum dilaksanakan
-                    if (anggota.kumpulanKelas.some(id => {if (id.equals(kelas._id)){return true;} })){ //cek apakah anggota sudah terdaftar
+                    if (anggota.kumpulanKelas.length!=0 || anggota.kumpulanKelas.some(id => {if (id.equals(kelas._id)){return true;} })){ //cek apakah anggota sudah terdaftar
                         await Anggota.updateOne(
                             { "_id": _id }, // Kriteria untuk mencari dokumen yang ingin diubah
                             { $pull: { "kumpulanKelas": kelas._id } } // Perintah untuk menghapus kelas dari array kumpulanKelas
