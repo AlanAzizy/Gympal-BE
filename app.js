@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
 app.use("/auth", authRoutes);
-app.use("/pembayaran", pembayaranRoutes);
+app.use("/pembayaran", authMiddlewares.protectRoute, pembayaranRoutes);
 
 
 // !GLOBAL ERROR HANDLER

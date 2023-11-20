@@ -15,14 +15,13 @@ module.exports.verifyPembayaran = async (req, res) => {
         // TODO cek apakah idPembayaran ada di dalam arranya
         var found = false
         pembayaranAnggota.forEach((element) => {
-            if (element == idAnggota) {
+            if (element == idPembayaran) {
                 found = true;
             }
         })
         if (found) {
             // TODO jika terdapat di dalam array, lakukan pencarian terhadap idPembayaran di collection pembayaran kemudian set statusPembayaran menjadi true 
-            const pembayaran = await Pembayaran.findOne({ _id: idPembayaran });
-            pembayaran.statusPembayaran = true
+            const pembayaran = await Pembayaran.findOneAndUpdate({ _id: idPembayaran }, { statusPembayaran: true });
             res.status(200).json({ message: "Data updated sucessfully" });
         }
         else {
@@ -47,14 +46,13 @@ module.exports.unverifyPembayaran = async (req, res) => {
         // TODO cek apakah idPembayaran ada di dalam arranya
         var found = false
         pembayaranAnggota.forEach((element) => {
-            if (element == idAnggota) {
+            if (element == idPembayaran) {
                 found = true;
             }
         })
         if (found) {
             // TODO jika terdapat di dalam array, lakukan pencarian terhadap idPembayaran di collection pembayaran kemudian set statusPembayaran menjadi true 
-            const pembayaran = await Pembayaran.findOne({ _id: idPembayaran });
-            pembayaran.statusPembayaran = false
+            const pembayaran = await Pembayaran.findOneAndUpdate({ _id: idPembayaran }, { statusPembayaran: false });
             res.status(200).json({ message: "Data updated sucessfully" });
         }
         else {
@@ -84,7 +82,8 @@ module.exports.createPembayaran = async (req, res) => {
                 buktiPembayaran: buktiPembayaran
             })
             newIdPembayaran = newPembayaran._id;
-            const result = await Anggota.updateOne({ _id: roleId }, { $push: { kumpulanPembayaran: newIdPembayaran } })
+            const result = await Anggota.updateOne({ _id: roleId }, { $push: { kumpulanPembayaran: newIdPembayaran } });
+            res.status(200).json({ result: result });
 
         }
         catch (err) {
@@ -96,4 +95,16 @@ module.exports.createPembayaran = async (req, res) => {
         res.status(401).json({ message: "Hanya anggota yang dapat create pembayaran" })
     }
 
+}
+
+module.exports.getAllPembayaran = async (req, res) => {
+    try {
+        // TODO ambil keseluruhan data dari pembayaran menggunakan findmany dengan nol filter
+        const payments = await Pembayaran.find({});
+        // TODO kembalikan sebagai json dan set status 200
+        res.status(200).json({ data: payments });
+    }
+    catch (err) {
+        res.status(200).json({ error: err });
+    }
 }
