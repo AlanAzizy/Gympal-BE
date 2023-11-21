@@ -40,7 +40,8 @@ module.exports.getAllDataPengguna = async (req, res) => {
                 kumpulanPembayaran : satu_anggota.kumpulanPembayaran,
                 kumpulanNotifikasi : satu_anggota.kumpulanNotifikasi,
                 last_payment : {},
-                payment : false
+                payment : false,
+                expdate : null
             })
         }
         for (satu_anggota of added_anggota){
@@ -53,19 +54,19 @@ module.exports.getAllDataPengguna = async (req, res) => {
         }
         const millisecondsInMonth = 30 * 24 * 60 * 60 * 1000;
         for (satu_anggota of added_anggota){
-            
             if (satu_anggota.last_payment.statusPembayaran!==undefined){
-                if (satu_anggota.last_payment.statusPembayaran && (new Date() - satu_anggota.tanggalPembayaran > millisecondsInMonth)){
+                if ((new Date() - satu_anggota.last_payment.tanggalPembayaran < millisecondsInMonth)){
                     satu_anggota.payment = true;
-                    
+                    var today = satu_anggota.last_payment.tanggalPembayaran;
+                    new_month = (today.getMonth() + 1)==12 ? 12 : (today.getMonth() + 1) ;
+                    today.setMonth(new_month);
+                    satu_anggota.expdate = today;
                 }else{
                     satu_anggota.payment = false;
                 }
             }else{
                 satu_anggota.payment = false;
             }
-
-            satu_anggota.expdate = new Date(satu_anggota.tanggalPembayaran+millisecondsInMonth);
         }
         res.status(201).json(added_anggota);
 
