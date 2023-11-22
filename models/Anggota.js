@@ -20,6 +20,11 @@ const AnggotaSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    expdate:{
+        type:Date,
+        default : new Date(),
+        required : true 
+    },
     kumpulanNotifikasi: [{ type: mongoose.Schema.Types.ObjectId, ref: "Notifikasi" }],
     kumpulanKelas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Kelas" }],
     kumpulanPembayaran: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pembayaran" }]

@@ -8,6 +8,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
 const authRoutes = require("./routers/authRoutes");
+const authMiddlewares = require("./middlewares/authMiddlewares");
+const kelolaAnggotaRoutes = require('./routers/kelolaAnggotaRoutes');
 const kelasRoutes = require("./routers/kelasRoutes");
 const authMiddlewares = require("./middlewares/authMiddlewares")
 var cors = require('cors');
@@ -44,6 +46,7 @@ app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
 app.use("/auth", authRoutes);
+app.use("/kelolaAnggota", kelolaAnggotaRoutes)
 app.use("/kelas", kelasRoutes);
 
 
