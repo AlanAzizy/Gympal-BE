@@ -1,5 +1,6 @@
 const Anggota = require("../models/Anggota");
 const Pembayaran = require("../models/Pembayaran");
+const Pengguna = require("../models/Pengguna");
 
 // ! REALISASI
 module.exports.verifyPembayaran = async (req, res) => {
@@ -97,12 +98,28 @@ module.exports.createPembayaran = async (req, res) => {
 
 }
 
+const getNama = async function (idAnggota) {
+    // cari pengguna dengan roleId nya adalah idAnggota
+    const pengguna = await Pengguna.findOne({ roleId: idAnggota });
+    // simpen si penggunanya
+    // kembalikan pengguna.nama
+    return pengguna.nama;
+}
 module.exports.getAllPembayaran = async (req, res) => {
     try {
         // TODO ambil keseluruhan data dari pembayaran menggunakan findmany dengan nol filter
         const payments = await Pembayaran.find({});
+        const allPaymnets = await Promise.all(payments.map(async (el) => {
+            return {
+                nama: await getNama(el.idAnggota),
+                metode: el.metode,
+                statusPembayaran: el.statusPembayaran,
+                tanggalPembayaran: el.tanggalPembayaran,
+                buktiPembayaran: el.buktiPembayaran
+            }
+        }))
         // TODO kembalikan sebagai json dan set status 200
-        res.status(200).json({ data: payments });
+        res.status(200).json({ data: allPaymnets });
     }
     catch (err) {
         res.status(200).json({ error: err });
