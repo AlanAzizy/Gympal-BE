@@ -10,6 +10,8 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routers/authRoutes");
 const authMiddlewares = require("./middlewares/authMiddlewares");
 const kelolaAnggotaRoutes = require('./routers/kelolaAnggotaRoutes');
+const kelasRoutes = require("./routers/kelasRoutes");
+const authMiddlewares = require("./middlewares/authMiddlewares")
 var cors = require('cors');
 const User = require("./models/Pengguna");
 
@@ -45,6 +47,7 @@ app.get("/", (req, res) => {
 })
 app.use("/auth", authRoutes);
 app.use("/kelolaAnggota", kelolaAnggotaRoutes)
+app.use("/kelas", kelasRoutes);
 
 
 // !GLOBAL ERROR HANDLER
