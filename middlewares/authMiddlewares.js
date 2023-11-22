@@ -16,6 +16,7 @@ module.exports.authCheck = (req, res, next) => {
                 if (decodedToken.role == "admin") {
                     // TODO jika dia merupakan admin, set local pengguna sebagai pengguna dan local role sebagai obj kosong
                     const pengguna = await Pengguna.findOne({ _id: decodedToken.idPengguna });
+                    console.log(pengguna);
                     res.locals.pengguna = pengguna;
                     res.locals.role = {};
                     next();
@@ -52,6 +53,8 @@ module.exports.protectRoute = (req, res, next) => {
     const token = req.cookies.jwt;
     // TODO cek jwtnya ada ato enggak
     if (jwt) {
+        //cek apaka masuk
+        console.log(jwt)
         // TODO kalo ada, cek apakah terverifikasi
         jwt.verify(token, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", (err, decodedToken) => {
             if (!err) {
