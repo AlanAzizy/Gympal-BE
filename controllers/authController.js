@@ -20,6 +20,11 @@ const handleErrors = (err) => {
         alamat: ""
     }
     console.log(err);
+
+    if (err.message == "Pengguna validation failed: email: Please enter valid email") {
+        errorObj.email = "Please enter valid email";
+    }
+
     if (err.code === 11000) {
         errorObj.email = 'that email is already registered';
         return errorObj;

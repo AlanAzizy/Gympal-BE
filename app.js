@@ -8,8 +8,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
 const authRoutes = require("./routers/authRoutes");
-const authMiddlewares = require("./middlewares/authMiddlewares");
-const kelasRoutes = require('./routers/kelasRoutes');
+const kelasRoutes = require("./routers/kelasRoutes");
+const authMiddlewares = require("./middlewares/authMiddlewares")
 var cors = require('cors');
 const User = require("./models/Pengguna");
 
