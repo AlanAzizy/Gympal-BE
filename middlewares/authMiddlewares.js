@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const Pengguna = require("../models/Pengguna");
 const Anggota = require("../models/Anggota");
 
+// auth check
 module.exports.authCheck = (req, res, next) => {
     // TODO ambil token dari cookies
     const token = req.cookies.jwt;
