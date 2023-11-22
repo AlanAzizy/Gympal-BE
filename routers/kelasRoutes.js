@@ -3,6 +3,14 @@ var router = express.Router();
 const kelasController = require("../controllers/kelasController");
 
 
+
+
+// ! TO CONTROLLER
+router.put("/updateKelas", kelasController.updateKelas);
+router.post("/addNewKelas", kelasController.addNewKelas);
+router.delete("/removeKelas", kelasController.removeKelas);
+
+
 router.put("/mendaftarKelas",kelasController.mendaftarKelas);
 router.put("/menghapusKelas",kelasController.menghapusKelas);
 router.get("/allKelas", kelasController.allKelasGet);
@@ -12,3 +20,4 @@ router.get("/kelasTerdaftar",kelasController.getKelasByAnggotaTerdaftar)
 router.get("/kelasById/:_id", kelasController.kelasByIdGet);
 router.post("/addNewKelas", kelasController.addNewKelas);
 module.exports = router;
+
