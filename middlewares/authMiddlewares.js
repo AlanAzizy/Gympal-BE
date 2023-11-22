@@ -115,4 +115,3 @@ module.exports.adminAuthorization = (req, res, next) => {
         res.status(401).json({ message: "not authenticated" });
     }
 }
-
