@@ -78,7 +78,7 @@ module.exports.setNonActive = async (req, res) => {
 
 // }
 
-module.exports.getAllDataAnggota = async (Req, res) => {
+module.exports.getAllDataAnggota = async (req, res) => {
     try{
         const allAnggota = await Anggota.find();
         res.status(200).json(allAnggota);

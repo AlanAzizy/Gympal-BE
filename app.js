@@ -11,7 +11,7 @@ const authRoutes = require("./routers/authRoutes");
 const authMiddlewares = require("./middlewares/authMiddlewares");
 const kelolaAnggotaRoutes = require('./routers/kelolaAnggotaRoutes');
 const kelasRoutes = require("./routers/kelasRoutes");
-// var cors = require('cors');
+var cors = require('cors');
 const pembayaranRoutes = require("./routers/pembayaranRoutes")
 const User = require("./models/Pengguna");
 
@@ -19,7 +19,7 @@ var app = express();
 
 // ! view engine setup
 app.set('views', path.join(__dirname, 'views'));
-// app.use(cors());
+app.use(cors());
 
 //! MIDDLEWARE SETUP
 app.use(logger('dev'));
