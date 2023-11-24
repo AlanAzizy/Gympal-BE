@@ -1,5 +1,6 @@
 const Anggota = require("../models/Anggota");
 const Pembayaran = require("../models/Pembayaran");
+const Pengguna = require("../models/Pengguna");
 
 module.exports.setActive = async (req, res) => {
     try {
@@ -78,12 +79,41 @@ module.exports.setNonActive = async (req, res) => {
 
 // }
 
+const getNama = async (idAnggota) => {
+    // cari pengguna dengan roleId nya adalah idAnggota
+    const pengguna = await Pengguna.findOne({ roleId: idAnggota });
+    // simpen si penggunanya
+    // kembalikan pengguna.nama
+    if (pengguna){
+        return pengguna.nama;
+    }else{
+        return null;
+    }
+}
+
 module.exports.getAllDataAnggota = async (req, res) => {
     try{
-        const allAnggota = await Anggota.find();
+        const anggota = await Anggota.find({});
+        const allAnggota = [];
+        i=1;
+        for (el of anggota){
+            const x = {
+                nama: await getNama(el._id),
+                id: el._id,
+                statusKeanggotaan: el.statusKeanggotaan,
+                expdate: el.expdate,
+                no : i
+            }
+            if (x.nama!=null){
+                console.log(x);
+                allAnggota.push(x);
+            }
+            i++;
+        }
         res.status(200).json(allAnggota);
     }catch(err){
         res.status(400).json({error : err});
     }
 }
+
 

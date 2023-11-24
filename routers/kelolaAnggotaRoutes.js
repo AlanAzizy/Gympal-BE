@@ -10,8 +10,3 @@ router.put("/setAnggotaNonActive/:idAnggota", kelolaAnggotaController.setNonActi
 router.get("/getAllDataAnggota", kelolaAnggotaController.getAllDataAnggota);
 
 module.exports = router;
-
-
-
-
-
