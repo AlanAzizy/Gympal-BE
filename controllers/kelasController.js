@@ -120,7 +120,8 @@ module.exports.updateKelas = async (req, res) => {
 module.exports.mendaftarKelas = async (req, res) => {
     const kelas_id = req.body._id;
     if (kelas_id) {
-        const _id = res.locals.anggota._id;
+        console.log(res.locals);
+        const _id = res.locals.role._id;
         try {
             const anggota = await Anggota.findOne({ _id: _id });
             const kelas = await Kelas.findOne({ _id: kelas_id });
@@ -133,7 +134,7 @@ module.exports.mendaftarKelas = async (req, res) => {
                         );
                         res.status(201).json({ "message": "berhasil menambah kelas", "kelas": kelas });
                     } else {
-                        res.status(400).json({ "message": "Anda telah terdaftar" });
+                        res.status(401).json({ "message": "Anda telah terdaftar" });
                     }
                 }
                 else {
@@ -151,7 +152,7 @@ module.exports.mendaftarKelas = async (req, res) => {
 module.exports.menghapusKelas = async (req, res) => {
     const kelas_id = req.body._id;
     if (kelas_id) {
-        const _id = res.locals.anggota._id;
+        const _id = res.locals.role._id;
         try {
             const anggota = await Anggota.findOne({ _id: { $gte: _id } });
             const kelas = await Kelas.findOne({ _id: { $gte: kelas_id } });
@@ -180,7 +181,7 @@ module.exports.menghapusKelas = async (req, res) => {
 }
 //anggota
 module.exports.getKelasByAnggotaTerdaftar = async (req, res) => {
-    const _id = res.locals.anggot._id;
+    const _id = res.locals.role._id;
     const arrayId = [];
     const kelas = [];
     try {
