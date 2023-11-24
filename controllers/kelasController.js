@@ -9,12 +9,10 @@ module.exports.allKelasGet = async (req, res) => {
     try {
         const kelas = await Kelas.getAllKelas();
         res.status(201).json({ kelas })
-        res.status(201).json({ kelas })
     }
     catch (err) {
         // TODO jika login gagal, lakukan handling error, kembalikan error ke depan, ubah status menjadi 400
-        const errorObj = handleErrors(err);
-        res.status(400).json({ error: errorObj });
+        res.status(400).json({"message" : "gagal mendapatkan kelas"});
     }
 }
 
@@ -54,30 +52,46 @@ module.exports.addNewKelas = async (req, res) => {
 }
 
 module.exports.removeKelas = async (req, res) => {
-    const kelas_id = req.body.id;
+    const kelas_id = req.params.kelas_id;
 
     kelas_akan_dihapus = await Kelas.findOne(
         { _id: kelas_id }
     )
-
-    if (!kelas_akan_dihapus) {
-        res.status(300).json({ "message": "kelas tidak tersedia" });
-    } else {
-        await Kelas.deleteOne(
-            { _id: kelas_id }
-        )
-        //update atribut kumpulanKelas di anggota
-        Anggota.updateMany(
-            {},
-            { $pull: { "kumpulanKelas": kelas_id } });
-
-        kelas_terhapus = await Kelas.findOne(
-            { _id: kelas_id }
-        )
-
-        if (!kelas_terhapus) {
-            res.status(201).json({ "message": "berhasil menghapus kelas", "kelas": kelas_akan_dihapus });
-        }
+    
+    try{
+        if (!kelas_akan_dihapus) {
+            res.status(300).json({ "message": "kelas tidak tersedia" });
+        } else {
+            try{
+                await Kelas.deleteOne(
+                { _id: kelas_id }
+                )   
+            }catch(error){
+                res.status(402).json({"message" : "tidak dapat menghapus"})
+            }
+            //update atribut kumpulanKelas di anggota
+            try{
+                Anggota.updateMany(
+                    {},
+                    { $pull: { "kumpulanKelas": kelas_id } });
+            }catch(error){
+                res.status(403).json({"message" : "gagal menghapus di bagian anggota"})
+            }
+    
+            try{
+                kelas_terhapus = await Kelas.findOne(
+                    { _id: kelas_id }
+                )
+            }catch(error){
+                res.status(410).json({"message" : "kelas masih belum terhapus"})
+            }
+    
+            if (!kelas_terhapus) {
+                res.status(201).json({ "message": "berhasil menghapus kelas", "kelas": kelas_akan_dihapus });
+            }
+    }
+    }catch(error){
+        res.status(401).json({"message" : "terdapat error"});
     }
 
 
@@ -108,10 +122,10 @@ module.exports.updateKelas = async (req, res) => {
                 );
                 res.status(201).json({ "message": "berhasil mengupdate kelas", "kelas": kelas_baru })
             } catch (err) {
-                res.status(400).json({ "message": "gagal mengupdate kelas" });
+                res.status(209).json({ "message": "gagal mengupdate kelas" });
             }
         } else {
-            res.status(400).json({ "message": "id kelas salah" });
+            res.status(210).json({ "message": "id kelas salah" });
         }
     } catch (err) {
         res.status(400).json({ "message": "id kelas salah" });
