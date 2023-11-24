@@ -20,6 +20,10 @@ const PembayaranSchema = new mongoose.Schema({
     buktiPembayaran: {
         type: String,
         required: true
+    },
+    bulan: {
+        type: Number,
+        required: true
     }
 })
 
