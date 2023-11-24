@@ -7,8 +7,6 @@ module.exports.authCheck = (req, res, next) => {
     // TODO ambil token dari cookies
     const token = req.headers.cookies;
     // TODO cek keberadaan token
-    console.log(JSON.stringify(req.headers.cookies));
-    console.log(req.headers);
     if (token) {
         // TODO  ada jika: 
         // TODO cek verifikasi token
