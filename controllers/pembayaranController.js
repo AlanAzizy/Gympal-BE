@@ -5,14 +5,14 @@ const Pengguna = require("../models/Pengguna");
 // ! REALISASI
 module.exports.verifyPembayaran = async (req, res) => {
     // TODO ambil idAnggota dari parameter
-    idAnggota = req.params.idAnggota;
+    const idAnggota = req.params.idAnggota;
     try {
         // TODO cari anggota dengan id yang bersesuaian
         const anggota = await Anggota.findOne({ _id: idAnggota });
         // TODO ambil atribut arraynya
         const pembayaranAnggota = anggota.kumpulanPembayaran;
         // TODO ambil idPembayaran dari paramater
-        idPembayaran = req.params.idPembayaran;
+        const idPembayaran = req.params.idPembayaran;
         // TODO cek apakah idPembayaran ada di dalam arranya
         var found = false
         pembayaranAnggota.forEach((element) => {
@@ -22,7 +22,11 @@ module.exports.verifyPembayaran = async (req, res) => {
         })
         if (found) {
             // TODO jika terdapat di dalam array, lakukan pencarian terhadap idPembayaran di collection pembayaran kemudian set statusPembayaran menjadi true 
-            const pembayaran = await Pembayaran.findOneAndUpdate({ _id: idPembayaran }, { statusPembayaran: true });
+            const pembayaran = await Pembayaran.findOneAndUpdate({ _id: idPembayaran }, { statusPembayaran: true }, { new: true });
+            const currentDate = new Date();
+            const inputDate = new Date();
+            inputDate.setDate(currentDate.getDate() + (pembayaran.bulan * 30));
+            const ang = await Anggota.findOneAndUpdate({ _id: idAnggota }, { expdate: inputDate });
             res.status(200).json({ message: "Data updated sucessfully" });
         }
         else {
@@ -73,14 +77,15 @@ module.exports.createPembayaran = async (req, res) => {
         // TODO jika tidak null (berarti dia anggota), ambil roleIdnya (currentAnggota._id),  bikin record baru dalam collection pembayaran, ambil idPembayaran dari recordnya, kemudian push ke kumpulanPembayaran dari anggotanya (anggota dengan _id nya adalah idRole)
         roleId = currentAnggota._id;
         // TODO ambil dulu si datanya dari req.body
-        const { metode, buktiPembayaran } = req.body;
+        const { metode, buktiPembayaran, bulan } = req.body;
         try {
             newPembayaran = await Pembayaran.create({
                 idAnggota: roleId,
                 metode: metode,
                 statusPembayaran: false,
                 tanggalPembayaran: new Date(),
-                buktiPembayaran: buktiPembayaran
+                buktiPembayaran: buktiPembayaran,
+                bulan: bulan
             })
             newIdPembayaran = newPembayaran._id;
             const result = await Anggota.updateOne({ _id: roleId }, { $push: { kumpulanPembayaran: newIdPembayaran } });
