@@ -134,7 +134,7 @@ module.exports.mendaftarKelas = async (req, res) => {
                         );
                         res.status(201).json({ "message": "berhasil menambah kelas", "kelas": kelas });
                     } else {
-                        res.status(401).json({ "message": "Anda telah terdaftar" });
+                        res.status(209).json({ "message": "Anda telah terdaftar" });
                     }
                 }
                 else {
