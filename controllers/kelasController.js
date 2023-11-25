@@ -152,10 +152,10 @@ module.exports.mendaftarKelas = async (req, res) => {
                     }
                 }
                 else {
-                    res.status(400).json({ "message": "kelas telah usai" });
+                    res.status(210).json({ "message": "kelas telah usai" });
                 }
             } else {
-                res.status(428).json({ "message": "Silakan melakukan pembayaran keanggotaan" });
+                res.status(211).json({ "message": "Silakan melakukan pembayaran keanggotaan" });
             }
         } catch (err) {
             res.status(400).json(err.message);

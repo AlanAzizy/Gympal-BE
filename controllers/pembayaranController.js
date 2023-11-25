@@ -16,6 +16,9 @@ module.exports.verifyPembayaran = async (req, res) => {
         // TODO cek apakah idPembayaran ada di dalam arranya
         var found = false
         pembayaranAnggota.forEach((element) => {
+            console.log(idPembayaran);
+            console.log(element);
+            console.log(1);
             if (element == idPembayaran) {
                 found = true;
             }
