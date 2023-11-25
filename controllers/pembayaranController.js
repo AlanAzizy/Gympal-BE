@@ -121,7 +121,9 @@ module.exports.getAllPembayaran = async (req, res) => {
                 metode: el.metode,
                 statusPembayaran: el.statusPembayaran,
                 tanggalPembayaran: el.tanggalPembayaran,
-                buktiPembayaran: el.buktiPembayaran
+                buktiPembayaran: el.buktiPembayaran,
+                idAnggota: el.idAnggota,
+                idPembayaran: el._id
             }
             return x;
         }))
