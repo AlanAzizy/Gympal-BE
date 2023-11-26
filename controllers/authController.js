@@ -19,7 +19,6 @@ const handleErrors = (err) => {
         noTelepon: "",
         alamat: ""
     }
-    console.log(err);
 
     if (err.message == "Pengguna validation failed: email: Please enter valid email") {
         errorObj.email = "Please enter valid email";
