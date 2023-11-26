@@ -29,7 +29,6 @@ const handleErrors = (err) => {
         errorObj.email = 'that email is already registered';
         return errorObj;
     }
-
     if (err.message === "incorrect password") {
         errorObj.password = "incorrect password";
     }

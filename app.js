@@ -8,8 +8,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
 const authRoutes = require("./routers/authRoutes");
-const authMiddlewares = require("./middlewares/authMiddlewares")
+const authMiddlewares = require("./middlewares/authMiddlewares");
+const kelolaAnggotaRoutes = require('./routers/kelolaAnggotaRoutes');
+const kelasRoutes = require("./routers/kelasRoutes");
 var cors = require('cors');
+const pembayaranRoutes = require("./routers/pembayaranRoutes")
 const User = require("./models/Pengguna");
 
 var app = express();
@@ -43,6 +46,9 @@ app.get("/", (req, res) => {
   res.json({ pesan: "halo" });
 })
 app.use("/auth", authRoutes);
+app.use("/kelolaAnggota", kelolaAnggotaRoutes)
+app.use("/kelas", kelasRoutes);
+app.use("/pembayaran", pembayaranRoutes);
 
 
 // !GLOBAL ERROR HANDLER
@@ -51,6 +57,7 @@ app.use(function (req, res, next) {
 });
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
+  
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
