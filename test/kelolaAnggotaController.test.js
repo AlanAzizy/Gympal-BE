@@ -1,4 +1,4 @@
-const { setActive, setNonActive } = require('./kelolaAnggotaController'); // Updated path
+const { setActive, setNonActive } = require('../controllers/kelolaAnggotaController'); // Updated path
 const Anggota = require('../models/Anggota');
 
 jest.mock('../models/Anggota');
