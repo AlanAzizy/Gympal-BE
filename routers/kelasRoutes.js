@@ -8,7 +8,7 @@ const kelasController = require("../controllers/kelasController");
 // ! TO CONTROLLER
 router.put("/updateKelas", kelasController.updateKelas);
 router.post("/addNewKelas", kelasController.addNewKelas);
-router.delete("/removeKelas", kelasController.removeKelas);
+router.delete("/removeKelas/:kelas_id", kelasController.removeKelas);
 
 
 router.put("/mendaftarKelas",kelasController.mendaftarKelas);
