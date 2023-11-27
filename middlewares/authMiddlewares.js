@@ -5,7 +5,7 @@ const Anggota = require("../models/Anggota");
 // auth check
 module.exports.authCheck = (req, res, next) => {
     // TODO ambil token dari cookies
-    const token = req.cookies.jwt;
+    const token = req.headers.cookies;
     // TODO cek keberadaan token
     if (token) {
         // TODO  ada jika: 
@@ -28,6 +28,7 @@ module.exports.authCheck = (req, res, next) => {
                     res.locals.pengguna = pengguna;
                     const anggota = await Anggota.findOne({ _id: decodedToken.idRole });
                     res.locals.role = anggota;
+                    console.log(anggota);
                     next();
                 }
             }
@@ -51,7 +52,7 @@ module.exports.authCheck = (req, res, next) => {
 
 module.exports.protectRoute = (req, res, next) => {
     // TODO ambil token dari cookies
-    const token = req.cookies.jwt;
+    const token = req.headers.cookies;
     // TODO cek jwtnya ada ato enggak
     if (jwt) {
         //cek apaka masuk
@@ -85,7 +86,7 @@ module.exports.protectRoute = (req, res, next) => {
 
 module.exports.adminAuthorization = (req, res, next) => {
     // TODO ambil dulu tokennya, dan lakukan decode terhadap tokennya
-    const token = req.cookies.jwt;
+    const token = req.headers.cookies;
     if (token) {
         jwt.verify(token, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", async (err, decodedToken) => {
             // TODO ambil id penggunanya
