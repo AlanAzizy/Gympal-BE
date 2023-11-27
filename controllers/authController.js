@@ -108,7 +108,7 @@ module.exports.loginPost = async (req, res) => {
             const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
             res.cookie("jwt", token, cookieConfig);
             const anggota = await Anggota.findOne({ _id: pengguna.roleId });
-            res.status(201).json({ pengguna : anggota, token });
+            res.status(201).json({ pengguna: { anggota, pengguna }, token });
 
         }
     }
