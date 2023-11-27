@@ -54,7 +54,6 @@ module.exports.signUpGet = (req, res) => {
 module.exports.signUpPost = async (req, res) => {
     try {
         const { noTelepon, alamat } = req.body;
-        const foto = "";
         if (req.body.foto) {
             // udah ada foto
             foto = req.body.foto;
