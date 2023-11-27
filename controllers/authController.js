@@ -19,7 +19,6 @@ const handleErrors = (err) => {
         noTelepon: "",
         alamat: ""
     }
-    console.log(err);
 
     if (err.message == "Pengguna validation failed: email: Please enter valid email") {
         errorObj.email = "Please enter valid email";
@@ -55,7 +54,6 @@ module.exports.signUpGet = (req, res) => {
 module.exports.signUpPost = async (req, res) => {
     try {
         const { noTelepon, alamat } = req.body;
-        const foto = "";
         if (req.body.foto) {
             // udah ada foto
             foto = req.body.foto;
