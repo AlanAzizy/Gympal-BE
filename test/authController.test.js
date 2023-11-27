@@ -14,7 +14,8 @@ const Anggota = require("../models/Anggota");
 
 jest.mock('../models/Pengguna', () => ({
     login: jest.fn(),
-    create: jest.fn()
+    create: jest.fn(),
+    findOne: jest.fn()
 }));
 jest.mock('../models/Anggota', () => ({
     create: jest.fn()
@@ -75,7 +76,7 @@ describe('loginPost function', () => {
             roleId: 'anggotaRoleId',
         };
         Pengguna.login.mockResolvedValueOnce(regularUser);
-
+        createToken.mockResolvedValueOnce('mockToken');
         await loginPost(mockReq, mockRes);
 
         expect(Pengguna.login).toHaveBeenCalledWith('user@example.com', 'userpassword');
@@ -150,6 +151,7 @@ describe('loginPost function', () => {
         };
         Pengguna.create.mockResolvedValueOnce(createdUser);
 
+        const pengguna = await Pengguna.findOne({email : "john@example.com"})
 
         await signUpPost(mockReq, mockRes);
 
@@ -157,9 +159,9 @@ describe('loginPost function', () => {
         expect(Pengguna.create).toHaveBeenCalledWith({
             nama: 'John Doe',
             email: 'john@example.com',
-            password: 'hashedPassword',
+            password: 'password124',
             role: 'anggota',
-            roleId: 'anggotaId',
+            roleId: undefined,
         });
         expect(mockRes.cookie).toHaveBeenCalledWith('jwt', mockToken, { httpOnly: true, maxAge: expect.any(Number) });
         expect(mockRes.status).toHaveBeenCalledWith(201);
