@@ -152,10 +152,10 @@ module.exports.mendaftarKelas = async (req, res) => {
                     }
                 }
                 else {
-                    res.status(400).json({ "message": "kelas telah usai" });
+                    res.status(210).json({ "message": "kelas telah usai" });
                 }
             } else {
-                res.status(428).json({ "message": "Silakan melakukan pembayaran keanggotaan" });
+                res.status(211).json({ "message": "Silakan melakukan pembayaran keanggotaan" });
             }
         } catch (err) {
             res.status(400).json(err.message);
@@ -326,27 +326,27 @@ module.exports.kelasByIdGet = async (req, res) => {
 }
 
 //admin
-module.exports.addNewKelas = async (req, res) => {
-    const { namaKelas, instruktur, durasi, detail, tanggal } = req.body;
-    if (namaKelas === undefined) { return res.status(300).json({ "message": "masukkan nama kelas" }); }
-    if (instruktur === undefined) { return res.status(300).json({ "message": "masukkan nama instruktur" }); }
-    if (durasi === undefined) { return res.status(300).json({ "message": "masukkan durasi kelas" }) }
-    if (tanggal === undefined) { return res.status(300).json({ "message": "masukkan tanggal kelas" }) }
-    try {
-        const new_kelas = await Kelas.create({ namaKelas, instruktur, durasi, detail, tanggal });
-        if (new_kelas) {
-            res.status(201).json({
-                "message": "create Kelas succes",
-                new_kelas
-            })
-        } else {
-            res.status(300).json({
-                "message": "failed to create Kelas"
-            })
-        }
-    } catch (err) {
-        console.log(err.message);
-        res.status(400).json(err.message)
-    }
-}
+// module.exports.addNewKelas = async (req, res) => {
+//     const { namaKelas, instruktur, durasi, detail, tanggal } = req.body;
+//     if (namaKelas === undefined) { return res.status(300).json({ "message": "masukkan nama kelas" }); }
+//     if (instruktur === undefined) { return res.status(300).json({ "message": "masukkan nama instruktur" }); }
+//     if (durasi === undefined) { return res.status(300).json({ "message": "masukkan durasi kelas" }) }
+//     if (tanggal === undefined) { return res.status(300).json({ "message": "masukkan tanggal kelas" }) }
+//     try {
+//         const new_kelas = await Kelas.create({ namaKelas, instruktur, durasi, detail, tanggal });
+//         if (new_kelas) {
+//             res.status(201).json({
+//                 "message": "create Kelas succes",
+//                 new_kelas
+//             })
+//         } else {
+//             res.status(300).json({
+//                 "message": "failed to create Kelas"
+//             })
+//         }
+//     } catch (err) {
+//         console.log(err.message);
+//         res.status(400).json(err.message)
+//     }
+// }
 
