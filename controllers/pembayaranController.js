@@ -16,9 +16,6 @@ module.exports.verifyPembayaran = async (req, res) => {
         // TODO cek apakah idPembayaran ada di dalam arranya
         var found = false
         pembayaranAnggota.forEach((element) => {
-            console.log(idPembayaran);
-            console.log(element);
-            console.log(1);
             if (element == idPembayaran) {
                 found = true;
             }
@@ -111,7 +108,6 @@ const getNama = async function (idAnggota) {
     const pengguna = await Pengguna.findOne({ roleId: idAnggota });
     // simpen si penggunanya
     // kembalikan pengguna.nama
-    console.log(pengguna);
     return pengguna.nama;
 }
 module.exports.getAllPembayaran = async (req, res) => {

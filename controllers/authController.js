@@ -69,7 +69,6 @@ module.exports.signUpPost = async (req, res) => {
     }
     catch (err) {
         // TODO kalau gagal, error handling, dan kirim errr
-        console.log(err);
         const errorObj = handleErrors(err);
         res.status(400).json({ error: errorObj });
     }

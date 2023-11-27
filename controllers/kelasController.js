@@ -12,7 +12,7 @@ module.exports.allKelasGet = async (req, res) => {
     }
     catch (err) {
         // TODO jika login gagal, lakukan handling error, kembalikan error ke depan, ubah status menjadi 400
-        res.status(400).json({"message" : "gagal mendapatkan kelas"});
+        res.status(400).json({ "message": "gagal mendapatkan kelas" });
     }
 }
 
@@ -54,44 +54,44 @@ module.exports.addNewKelas = async (req, res) => {
 module.exports.removeKelas = async (req, res) => {
     const kelas_id = req.params.kelas_id;
 
-    kelas_akan_dihapus = await Kelas.findOne(
-        { _id: kelas_id }
-    )
-    
-    try{
+    try {
+        kelas_akan_dihapus = await Kelas.findOne(
+            { _id: kelas_id }
+        )
+
         if (!kelas_akan_dihapus) {
             res.status(300).json({ "message": "kelas tidak tersedia" });
         } else {
-            try{
+            try {
                 await Kelas.deleteOne(
-                { _id: kelas_id }
-                )   
-            }catch(error){
-                res.status(402).json({"message" : "tidak dapat menghapus"})
+                    { _id: kelas_id }
+                )
+            } catch (error) {
+                res.status(402).json({ "message": "tidak dapat menghapus" })
             }
             //update atribut kumpulanKelas di anggota
-            try{
+            try {
                 Anggota.updateMany(
                     {},
                     { $pull: { "kumpulanKelas": kelas_id } });
-            }catch(error){
-                res.status(403).json({"message" : "gagal menghapus di bagian anggota"})
+            } catch (error) {
+                res.status(403).json({ "message": "gagal menghapus di bagian anggota" })
             }
-    
-            try{
+
+            try {
                 kelas_terhapus = await Kelas.findOne(
                     { _id: kelas_id }
                 )
-            }catch(error){
-                res.status(410).json({"message" : "kelas masih belum terhapus"})
+            } catch (error) {
+                res.status(410).json({ "message": "kelas masih belum terhapus" })
             }
-    
+
             if (!kelas_terhapus) {
                 res.status(201).json({ "message": "berhasil menghapus kelas", "kelas": kelas_akan_dihapus });
             }
-    }
-    }catch(error){
-        res.status(401).json({"message" : "terdapat error"});
+        }
+    } catch (error) {
+        res.status(401).json({ "message": "terdapat error" });
     }
 
 
@@ -110,7 +110,6 @@ module.exports.updateKelas = async (req, res) => {
         if (durasi === undefined) { durasi = kelas_lama.durasi };
         if (detail === undefined) { detail = kelas_lama.detail };
         if (tanggal === undefined) { tanggal = kelas_lama.tanggal };
-        console.log(kelas_lama);
         if (kelas_lama) {
             try {
                 await Kelas.findOneAndUpdate(
@@ -134,7 +133,6 @@ module.exports.updateKelas = async (req, res) => {
 module.exports.mendaftarKelas = async (req, res) => {
     const kelas_id = req.body._id;
     if (kelas_id) {
-        console.log(res.locals);
         const _id = res.locals.role._id;
         try {
             const anggota = await Anggota.findOne({ _id: _id });
@@ -200,7 +198,6 @@ module.exports.getKelasByAnggotaTerdaftar = async (req, res) => {
     const kelas = [];
     try {
         const anggota = await Anggota.findOne({ _id: { $gte: _id } });
-        console.log(anggota.kumpulanKelas);
         anggota.kumpulanKelas.forEach((id) => {
             arrayId.push(id.toHexString());
         }
@@ -238,13 +235,11 @@ module.exports.kelasBelumDilakukan = async (req, res) => {
 //tambah dummy data
 module.exports.insertAllKelas = async (req, res) => {
     try {
-        const foto = "";
         if (req.body.foto) {
             // udah ada foto
             foto = req.body.foto;
         }
 
-        console.log(1);
         allklas = [{
             namaKelas: "yoga",
             instruktur: "yanti",
@@ -299,9 +294,7 @@ module.exports.insertAllKelas = async (req, res) => {
     }
     catch (err) {
         // TODO kalau gagal, error handling, dan kirim errr
-        console.log(err);
-        const errorObj = handleErrors(err);
-        res.status(400).json({ error: errorObj });
+        res.status(400).json({ error: err.message });
     }
 }
 

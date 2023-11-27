@@ -5,15 +5,10 @@ const Pengguna = require("../models/Pengguna");
 module.exports.setActive = async (req, res) => {
     try {
         // aman
-        console.log(req.params.idAnggota);
         const response = await Anggota.findOneAndUpdate({ _id: req.params.idAnggota }, { statusKeanggotaan: true });
-        if (response){
-            console.log(response);
-        }
         res.status(200).json({ message: "Data Updated Sucessfully" });
     }
     catch (err) {
-        console.log(err);
         res.status(400).json({ error: err });
     }
 }
@@ -25,7 +20,6 @@ module.exports.setNonActive = async (req, res) => {
         res.status(200).json({ message: "Data Updated Sucessfully" });
     }
     catch (err) {
-        console.log(err);
         res.status(400).json({ error: err });
     }
 }
@@ -107,7 +101,6 @@ module.exports.getAllDataAnggota = async (req, res) => {
                 no: i
             }
             if (x.nama != null) {
-                console.log(x);
                 allAnggota.push(x);
             }
             i++;
