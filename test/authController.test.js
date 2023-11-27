@@ -130,7 +130,6 @@ describe('loginPost function', () => {
             cookie: jest.fn(),
         };
 
-        // Asynchronous block to wait for signUpPost to complete
 
         // Mocking Anggota.create
         const createdAnggota = {
