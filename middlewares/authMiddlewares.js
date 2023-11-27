@@ -87,8 +87,6 @@ module.exports.protectRoute = (req, res, next) => {
 module.exports.adminAuthorization = (req, res, next) => {
     // TODO ambil dulu tokennya, dan lakukan decode terhadap tokennya
     const token = req.headers.cookies;
-    console.log(req.headers);
-    console.log(token);
     if (token) {
         jwt.verify(token, "9cdef41de4e4016adb9d8bascbsaocjbasovbaowq9071291179", async (err, decodedToken) => {
             // TODO ambil id penggunanya
