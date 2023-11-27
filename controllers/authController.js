@@ -54,11 +54,15 @@ module.exports.signUpGet = (req, res) => {
 module.exports.signUpPost = async (req, res) => {
     try {
         const { noTelepon, alamat } = req.body;
+        let anggota = {};
         if (req.body.foto) {
             // udah ada foto
-            foto = req.body.foto;
+            const foto = req.body.foto;
+            anggota = await Anggota.create({ noTelepon, alamat, statusKeanggotaan: false, foto });
         }
-        const anggota = await Anggota.create({ noTelepon, alamat, statusKeanggotaan: false, foto });
+        else {
+            anggota = await Anggota.create({ noTelepon, alamat, statusKeanggotaan: false });
+        }
         // TODO kalau berhasil, bikin jwt, masukin cookies, kembalikan object user sebagai penanda keberhasilan
         const { nama, email, password } = req.body;
         const user = await Pengguna.create({ nama, email, password, role: "anggota", roleId: anggota._id });
@@ -103,7 +107,8 @@ module.exports.loginPost = async (req, res) => {
             const token = createToken(pengguna._id, pengguna.roleId, "anggota");
             const cookieConfig = { httpOnly: true, maxAge: maxAge * 1000 };
             res.cookie("jwt", token, cookieConfig);
-            res.status(201).json({ pengguna: pengguna, token });
+            const anggota = await Anggota.findOne({ _id: pengguna.roleId });
+            res.status(201).json({ anggota, token });
 
         }
     }
